@@ -1,0 +1,109 @@
+﻿@model ADOLib.Models.Employee
+
+@{
+    ViewData["Title"] = Model != null ? "Edit" : "Create";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>Employee</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form enctype="multipart/form-data" asp-action="@ViewData["Title"]">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="EmpId" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            @*<div class="form-group">
+            <label asp-for="ImagePath" class="control-label" hidden></label>
+            <input asp-for="ImagePath"  class="form-control" type="hidden" />
+        </div>
+        <div class="form-group">
+            <label for="ProfileImage" class="control-label">Profile Image</label>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="customFile" name="ProfileImage" />
+                <label class="custom-file-label" for="customFile">Choose file</label>
+                <span asp-validation-for="ImagePath" class="text-danger"></span>
+            </div>
+             </div>*@
+            <input asp-for="ImagePath" class="form-control" type="hidden" />
+            @if (@Model != null && @Model.ImagePath != null)
+            {
+                <div class="form-group">
+                    <label for="ProfileImage" class="control-label">Profile Image</label>
+                    <img src="~/images/@Model.ImagePath"
+                         class="rounded-circle"
+                         height="40" width="40"
+                         asp-append-version="true" />
+                </div>
+                <div class="form-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile" name="ProfileImage" />
+                        <label class="custom-file-label" for="customFile">Choose file</label>
+                        <span asp-validation-for="ImagePath" class="text-danger"></span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label for="ProfileImage" class="control-label">Profile Image</label>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="customFile" name="ProfileImage" />
+                        <label class="custom-file-label" for="customFile">Choose file</label>
+                        <span asp-validation-for="ImagePath" class="text-danger"></span>
+                    </div>
+                </div>
+            }
+
+        <div class="form-group">
+            <label asp-for="DeptId" class="control-label"></label>
+            <select asp-for="DeptId" asp-items="@(new SelectList(ViewBag.Departments,"DeptId","Name"))" class="form-control">
+                <option value="">--Select--</option>
+            </select>
+            <span asp-validation-for="DeptId" class="text-danger"></span>
+        </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        // var path = "\\images\\" + $("input[name = 'ImagePath']").val();
+        // $(".custom-file-input").val(path);
+
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            $("input[name = 'ImagePath']").val(fileName)
+        });
+
+        $("input[type='submit']").click(function (e) {
+            if ($("input[name = 'ImagePath']").val() == "") {               
+                $('span[data-valmsg-for="ImagePath"]').text('Please upload Profile Pic'); 
+                e.preventDefault();
+                //alert("Please upload Profile Pic");
+                // display error msg beside ddl too
+            }
+        });
+
+    </script>
+}
